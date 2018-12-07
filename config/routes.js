@@ -1,6 +1,12 @@
 const axios = require('axios');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const knex = require('knex');
+const knexConfig = require('../knexfile');
+const db = knex(knexConfig.development);
+const { authenticate } = require('./middlewares.js');
 
-const { authenticate } = require('./middlewares');
+const secret = "Why can't banks keep secrets? There are too many tellers!";
 
 module.exports = server => {
   server.post('/api/register', register);
@@ -8,12 +14,42 @@ module.exports = server => {
   server.get('/api/jokes', authenticate, getJokes);
 };
 
+function tokenMaker(user) {
+  const payload = {
+    username: user.username
+  };
+  const options = {
+    expiresIn: '10m'
+  };
+  return jwt.sign(payload, secret, options)
+}
+
 function register(req, res) {
-  // implement user registration
+  const creds = req.body;
+  const hash = bcrypt.hashSync(creds.password, 12);
+  creds.password = hash;
+  db('users')
+    .insert(creds)
+    .then(ids => {
+      res.status(201).json(ids);
+    })
+    .catch(err => res.json(err));
 }
 
 function login(req, res) {
-  // implement user login
+  const creds = req.body;
+  db('users')
+    .where({ username: creds.username })
+    .first()
+    .then(user => {
+      if (user && bcrypt.compareSync(creds.password, user.password)) {
+        const token = tokenMaker(user);
+        res.status(200).json({ Welcome: user.username, token });
+      } else {
+        res.status(401).json({ message: 'you shall not pass!' });
+      }
+    })
+    .catch(err => res.json(err))
 }
 
 function getJokes(req, res) {
