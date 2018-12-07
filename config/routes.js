@@ -4,14 +4,14 @@ const jwt = require('jsonwebtoken');
 const knex = require('knex');
 const knexConfig = require('../knexfile');
 const db = knex(knexConfig.development);
-const { authenticate } = require('./middlewares.js');
+//const { authenticate } = require('./middlewares.js');
 
 const secret = "Why can't banks keep secrets? There are too many tellers!";
 
 module.exports = server => {
   server.post('/api/register', register);
   server.post('/api/login', login);
-  server.get('/api/jokes', authenticate, getJokes);
+  server.get('/api/jokes', getJokes);
 };
 
 function tokenMaker(user) {
@@ -54,6 +54,7 @@ function login(req, res) {
 
 function getJokes(req, res) {
   axios
+  //@ts-ignore
     .get('https://safe-falls-22549.herokuapp.com/random_ten')
     .then(response => {
       res.status(200).json(response.data);
