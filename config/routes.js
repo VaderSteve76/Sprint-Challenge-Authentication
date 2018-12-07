@@ -6,7 +6,7 @@ const knexConfig = require('../knexfile.js');
 const db = knex(knexConfig.development);
 const { authenticate } = require('./middlewares.js');
 
-const secret = "Why can't banks keep secrets? There are too many tellers!";
+const secret = "Why can’t banks keep secrets? There are too many tellers!";
 
 module.exports = server => {
   server.post('/api/register', register);
