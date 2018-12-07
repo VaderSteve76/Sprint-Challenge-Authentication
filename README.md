@@ -14,9 +14,16 @@
 ## Questions - Self Study - You can exercise your Google-Fu for this and any other _Sprint Challenge_ in the future.
 
 1. What is the purpose of using _sessions_?
-2. What does bcrypt do to help us store passwords in a secure manner.
+Sessions allow data to be persisted on a server
+
+2. What does bcrypt do to help us store passwords in a secure manner.Bcrypt hashes passwords
+
+
 3. What does bcrypt do to slow down attackers?
+Uses multiple rounds for hashing
+
 4. What are the three parts of the JSON Web Token?
+header,payload,signature
 
 ## Project Description - User Management System - Jokes On YoU!
 
